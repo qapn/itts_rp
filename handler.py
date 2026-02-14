@@ -75,8 +75,8 @@ def _utmos(audio_np):
 
 def _nisqa(audio_np):
     import torch
-    wav = resample_fn(torch.from_numpy(audio_np).float())
-    return float(nisqa_model(wav, 16000)[0].item())
+    wav = resample_fn(torch.from_numpy(audio_np).float()).unsqueeze(0)
+    return float(nisqa_model(wav)[0].item())
 
 
 def _mel_vec(audio_np):
