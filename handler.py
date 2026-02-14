@@ -83,10 +83,18 @@ def handler(job):
             random.seed(seed)
 
         gen_kwargs = {}
-        for key in ('temperature', 'top_k', 'top_p', 'num_beams', 'max_mel_tokens'):
+        _INT_KEYS = ('top_k', 'num_beams', 'max_mel_tokens')
+        _BOOL_KEYS = ('do_sample',)
+        for key in ('temperature', 'top_k', 'top_p', 'num_beams', 'max_mel_tokens',
+                     'do_sample', 'repetition_penalty', 'length_penalty'):
             if key in inp:
                 val = inp[key]
-                gen_kwargs[key] = int(val) if key in ('top_k', 'num_beams', 'max_mel_tokens') else float(val)
+                if key in _INT_KEYS:
+                    gen_kwargs[key] = int(val)
+                elif key in _BOOL_KEYS:
+                    gen_kwargs[key] = bool(val)
+                else:
+                    gen_kwargs[key] = float(val)
 
         model.infer(
             spk_audio_prompt=ref_path,
