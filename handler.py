@@ -75,11 +75,18 @@ def handler(job):
         emo_vector = inp.get('emo_vector')
         emo_alpha = float(inp.get('emo_alpha', 0.7))
 
+        seed = int(inp.get('seed', 0))
+        if seed != 0:
+            import torch
+            import random
+            torch.manual_seed(seed)
+            random.seed(seed)
+
         gen_kwargs = {}
-        for key in ('temperature', 'top_k', 'top_p', 'num_beams', 'max_mel_tokens', 'seed'):
+        for key in ('temperature', 'top_k', 'top_p', 'num_beams', 'max_mel_tokens'):
             if key in inp:
                 val = inp[key]
-                gen_kwargs[key] = int(val) if key in ('top_k', 'num_beams', 'max_mel_tokens', 'seed') else float(val)
+                gen_kwargs[key] = int(val) if key in ('top_k', 'num_beams', 'max_mel_tokens') else float(val)
 
         model.infer(
             spk_audio_prompt=ref_path,
